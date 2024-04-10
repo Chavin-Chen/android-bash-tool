@@ -1,7 +1,12 @@
 # 一款提升 Android 开发者效率的 Bash 工具
 
 > 这是一款适用于 Android 应用开发者调试所需的工具。所有实际要执行的命令都会先在终端输出
+
 ```bash
+# 下载 basic.my.tool.sh 文件到本地任意路径后执行即可安装：
+chmod +x basic.my.tool.sh
+./basic.my.tool.sh install
+
 # 查看帮助索引
 mt -h
 
@@ -58,7 +63,7 @@ my_disc: 断开无线连接
 
 ## Adb 批量执行
 
-> `adb`在连接有多台设备时执行指令会报错，需要通过设备序列号选择设备执行，本工具中的`madb`可简化此操作；其指令参数同`adb`
+> `adb`在连接有多台设备时执行指令会报错，需要通过设备序列号选择设备执行，本工具中的`madb`可简化此操作（支持2种模式：批量应用、选择执行）；其它指令参数同`adb`
 
 ```bash
 # 推送文件到多个设备
@@ -131,7 +136,7 @@ dump activity
 # 查看工程模块依赖(在 gradlew 同级目录下执行)
 dump deps :app
 
-在标准输出中打印一些信息, 默认别名 dump : 
+在标准输出中打印一些信息, 默认别名 dump :
     1. Activity栈信息: my_dump activity [--top] ,添加 --top 表示只看最顶层Activity
     2. 模块依赖信息: my_dump deps :app debugRuntimeClasspath {filter}
     3. 相关进程信息: my_dump process <filter>
@@ -155,7 +160,7 @@ trace
 
 ## Git 相关
 
-> 此命令封装有常用Git操作，如 Fetch、Rebase、Push，自动处理分支同名问题、支持简易的浅克隆写法
+> 此命令封装有常用 Git 操作，如 Fetch、Rebase、Push，自动处理分支同名问题、支持简易的浅克隆写法
 
 ```bash
 # 浅克隆方式拉取远端分支到本地
@@ -166,7 +171,7 @@ mgit rebase develop
 mgit push
 
 
-封装的常用Git命令；支持: 
+封装的常用Git命令；支持:
    1. my_git fetch [branch] [FETCH-OPTS]: 拉取远端仓库branch分支到本地branch分支，但不切换到branch。(如本地已有branch则起备用分支branch_暂存)
    2. my_git new <branch> <FETCH-OPTS> <branch2>: 拉取远端branch分支到本地branch2分支，并切换到branch2分支
    3. my_git pull [branch] [FETCH-OPTS]: 拉取远端分支branch到本地，并切到branch分支；(如本地已有branch则起备用分支branch_暂存)
@@ -181,7 +186,7 @@ mgit push
 
  *若不填分支名参数[branch]则默认用当前分支
   备用分支名规则: 若原分支为 develop 则对应的备用分支为 develop_
-  FETCH-OPTS: 常用于浅拉取，填整数即可，如 10: git fetch origin develp --depth=10 
+  FETCH-OPTS: 常用于浅拉取，填整数即可，如 10: git fetch origin develp --depth=10
     若需拉取全部commit，则可填 '-' 或 '0' 或 '-1'
 ```
 
