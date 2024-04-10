@@ -1,14 +1,14 @@
 if [[ -n "$MY_BASIC_TOOLS" ]]; then
     return
 fi
-readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.1 (build at 20211014.2050)'
+readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 20240410.2134)'
 readonly MY_TOOL_SERVER='http://127.0.0.1'
 
 # 默认移动设备IP与Port
-__MY_DEF_PHONE_IP='192.168.3.99'
+__MY_DEF_PHONE_IP='127.0.0.1'
 __MY_DEF_TCP_PORT='5555'
 # 默认以本机作为代理服务器
-__MY_DEF_PROXY_IP=$(ifconfig en0 | grep -e "inet [0-9|.]* netmask.*" | sed 's/inet \([0-9|.]*\) netmask.*/\1/g')
+__MY_DEF_PROXY_IP=$(ifconfig en0 2>/dev/null | grep -e "inet [0-9|.]*\s*netmask.*" | sed 's/inet \([0-9|.]*\)\s*netmask.*/\1/g')
 [[ -z "$__MY_DEF_PROXY_IP" ]] && __MY_DEF_PROXY_IP='127.0.0.1'
 __MY_DEF_PROXY_PORT='8888'
 # 执行策略开关(位控制): 1-isRealRun 2-isEchoCmd

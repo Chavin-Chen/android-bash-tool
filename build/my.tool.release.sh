@@ -3,8 +3,8 @@
 # =========================================================================================
 
 function release_my_basic() {
-    cat $HOME/.basic.my.tool.bash_profile >./basic.my.tool.sh
-    cat <<"END" >>./basic.my.tool.sh
+    cat $HOME/.basic.my.tool.bash_profile >../basic.my.tool.sh
+    cat <<"END" >>../basic.my.tool.sh
 # =========================================================================================+++
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ Install ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓+++
 # =========================================================================================+++
@@ -86,9 +86,6 @@ END
 function release_my_tools() {
     if [[ -r "$HOME/.basic.my.tool.bash_profile" ]]; then
         release_my_basic
-        # echo 'start upload: ./basic.my.tool.sh'
-        # scp ./basic.my.tool.sh 'chenchangwen@10.227.71.119:/var/www/html/tool/sh/'
-        # (($?==0)) && echo 'file uploaded: http://10.227.71.119/tool/sh/basic.my.tool.sh'
     fi
 }
 
