@@ -914,7 +914,8 @@ function __run() {
 
 # 版本更新 __my -u $url
 function __my() {
-    case "$1" in
+    local opt=${1:-'-h'}
+    case "$opt" in
     '-u' | '--update')
         local url=$([[ -n "$2" ]] && echo "$2" || echo "$MY_TOOL_SERVER/tool/sh/basic.my.tool.sh")
         echo "Installing From Server($MY_TOOL_SERVER)..."
