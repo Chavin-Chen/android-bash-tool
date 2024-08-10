@@ -1,11 +1,11 @@
 if [[ -n "$MY_BASIC_TOOLS" ]]; then
     return
 fi
-readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 20240410.2134)'
+readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 20240810.1100)'
 readonly MY_TOOL_SERVER='http://127.0.0.1'
 
 # 默认移动设备IP与Port
-__MY_DEF_PHONE_IP='127.0.0.1'
+__MY_DEF_PHONE_IP=$([ -r $HOME/.basic.my.phone ] && cat $HOME/.basic.my.phone || echo '127.0.0.1')
 __MY_DEF_TCP_PORT='5555'
 # 默认以本机作为代理服务器
 __MY_DEF_PROXY_IP=$(ifconfig en0 2>/dev/null | grep -e "inet [0-9|.]*\s*netmask.*" | sed 's/.*inet \([0-9|.]*\).*netmask.*/\1/g')
@@ -210,6 +210,8 @@ function my_conn() {
         fi
     fi
     __run "adb connect ${target}${port}"
+    __MY_DEF_PHONE_IP=${target%%':'*}
+    echo $__MY_DEF_PHONE_IP > $HOME/.basic.my.phone
 }
 
 # 断开无线连接
@@ -744,7 +746,7 @@ function my_deps_filter() {
     local matched
     while read line; do
         if [[ "$line" == *"$COMPONENT_SPLIT"* ]]; then
-            level=$(echo "$line" | grep -o $LEVEL_FLAG | wc -l)
+            level=$(echo "$line" | grep -o "$LEVEL_TAB" | wc -l)
             component=${line##*$COMPONENT_SPLIT}
             matched=$([[ "$line" =~ .*($filter).* ]] && echo 1 || echo 0)
             # 串结构:level(int)@componet(string)#matched(int)
