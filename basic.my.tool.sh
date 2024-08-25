@@ -45,6 +45,8 @@ alias proxy='my_proxy'
 alias ain='my_ain'
 # 快捷方式: 开源输入法支持中文
 alias aime='my_aime'
+# 安装APK
+alias install='mgit install'
 
 # ============ Git ============
 # 快捷方式: 自定义Git命令包装
