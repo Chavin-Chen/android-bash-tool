@@ -10,7 +10,7 @@ chmod +x basic.my.tool.sh
 # 查看帮助索引
 mt -h
 
-Basic.My.Tool: Version 2.1 (build at 20211014.2050)
+Basic.My.Tool: Version 2.3 (build at 20260908)
  使用方法索引:
     1.重启终端: reopen   清理终端: cls
     2.查看Adb连接的移动设备: devs
@@ -20,17 +20,19 @@ Basic.My.Tool: Version 2.1 (build at 20211014.2050)
     6.移动设备网络代理: proxy
     7.ADB输入: ain 通过adb输入; aime 通过第三方输入法输入
     8.自定义Git命令组: mgit
-    9.混淆堆栈解析: trace
+    9.混淆堆栈解析: trace 或 retrace
     10.打印一些信息(如当前Activity栈、模块依赖等): dump
     11.清理数据(如终端、手机应用、代理、调试标记等): clean
     12.卸载移动设备应用: uninstall
     13.移动设备进程等待调试: debug
+    14.安装APK: install <APK路径>
+    15.打开Deep Link: dlink <URI>
 
 # 详细的使用方式 <CMD> -h ，如
 proxy -h
 
 # 命令仅输出不实际执行
-__run --cfg echo
+__run --cfg '!run' echo
 # 恢复到先输出再执行的模式
 __run --cfg run echo
 ```
@@ -40,8 +42,8 @@ __run --cfg run echo
 ```bash
 # 查看当前连接设备
 devs
-# 以TCP-IP方式启动手机端adb服务进程，并以无线方式连接到改设备
-# 可更新 ~/.basic.my.tool.bash_profile 中的 __MY_DEF_PHONE_IP 值为常用设备IP，即可省略参数
+# 以TCP-IP方式启动手机端adb服务进程，并以无线方式连接到该设备
+# 可将常用设备 IP 写入 ~/.basic.my.phone，重新启动 Shell 后即可省略参数
 conn
 
 my_conn: 建立无线连接（Adb-Wifi）:
@@ -63,13 +65,16 @@ my_disc: 断开无线连接
 
 ## Adb 批量执行
 
-> `adb`在连接有多台设备时执行指令会报错，需要通过设备序列号选择设备执行，本工具中的`madb`可简化此操作（支持2种模式：批量应用、选择执行）；其它指令参数同`adb`
+> `madb` 支持批量执行和选择设备执行，默认使用选择模式，其他指令参数同 `adb`。工具为直接执行的 `adb` 增加了 `-d` 别名；`madb` 会按序列号操作所选设备。
 
 ```bash
 # 推送文件到多个设备
+madb -a
 madb push ./data.txt /sdcard/
+# 恢复选择设备模式
+madb -s
 
-my_multi_adb: 多adb命令应用支持，默认别名为 madb
+my_multi_adb: 多adb命令应用支持，默认别名为 madb，默认选择单台设备
    1. 查看当前模式: my_multi_adb -m
    2. 设置为选择模式: my_multi_adb -s 此种模式下，若有多设备，需要选择某设备执行
    3. 设置为全部模式: my_multi_adb -a 此种模式下，会依次把命令在各设备上执行
@@ -92,7 +97,7 @@ cap
 
 # 查看手机端网络代理
 proxy
-# 设备移动设备代理为当前PC的8888端口
+# 设置移动设备代理为当前PC的9900端口
 proxy def
 # 移除移动设备代理
 proxy clean
@@ -100,7 +105,7 @@ proxy clean
  网络代理(通过 adb shell settings实现，部分ROM可能不支持)
    1. 查看代理: my_proxy （这个和Wifi设置的代理不是一回事）
    2. 设置代理:
-      a. my_proxy default 默认代理到本机8888端口
+      a. my_proxy default 默认代理到本机9900端口
       b. my_proxy <IP>:<PORT> 或 my_proxy <IP> <PORT> 支持传入IP和端口
    3. 关闭代理: my_proxy close 或 my_proxy clean
  *对于有多设备连接的场景，按提示选择一个目标设备操作即可
@@ -124,11 +129,18 @@ ADB输入（需安装输入法: https://github.com/senzhk/ADBKeyBoard）
 
 # 通过包名卸载APP
 uninstall com.test.app
+
+# 安装 APK，支持多设备选择以及带空格的文件路径
+install -r './app debug.apk'
 ```
 
 ## App 调试
 
 ```bash
+# 打开 Deep Link，使用引号保留查询参数中的 & 等字符
+dlink 'demo://detail?id=123&from=debug'
+dlink -h
+
 # 查看进程信息
 dump process com.test.app
 # 查看Activity栈信息
@@ -151,10 +163,12 @@ clean pkg com.test.app
 
 # 拉起Android Studio自带的 proguardgui.sh 工具
 trace
+# retrace 同样支持 ANDROID_HOME、默认 SDK 目录和 PATH 查找
+retrace
 
 混淆堆栈解析，依次从以下路径查找：
    1. 环境变量ANDROID_HOME: tools/proguard/bin/proguardgui.sh
-   2. AndroidStudio默认配置: /Users/chavinchen/Library/Android/sdk/tools/proguard/bin/proguardgui.sh
+   2. AndroidStudio默认配置: $HOME/Library/Android/sdk/tools/proguard/bin/proguardgui.sh
    3. 从PATH中查找执行: proguardgui.sh
 ```
 

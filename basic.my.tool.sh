@@ -1,20 +1,22 @@
 if [[ -n "$MY_BASIC_TOOLS" ]]; then
     return
 fi
-readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 20240810.1100)'
+readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 2026098.2041)'
 readonly MY_TOOL_SERVER='http://127.0.0.1'
+export pc=pc@192.168.3.100
+alias pc="ssh $pc"
 
 # 默认移动设备IP与Port
-__MY_DEF_PHONE_IP=$([ -r $HOME/.basic.my.phone ] && cat $HOME/.basic.my.phone || echo '127.0.0.1')
+__MY_DEF_PHONE_IP=$([ -r $HOME/.basic.my.phone ] && cat $HOME/.basic.my.phone || echo '10.71.161.76') 
 __MY_DEF_TCP_PORT='5555'
 # 默认以本机作为代理服务器
 __MY_DEF_PROXY_IP=$(ifconfig en0 2>/dev/null | grep -e "inet [0-9|.]*\s*netmask.*" | sed 's/.*inet \([0-9|.]*\).*netmask.*/\1/g')
 [[ -z "$__MY_DEF_PROXY_IP" ]] && __MY_DEF_PROXY_IP='127.0.0.1'
-__MY_DEF_PROXY_PORT='8888'
+__MY_DEF_PROXY_PORT='9900'
 # 执行策略开关(位控制): 1-isRealRun 2-isEchoCmd
 __MY_RUN_POLICY=3
 # Multi-adb模式: 0-All 1-Single
-__MY_MULTI_ADB_MOD=0
+__MY_MULTI_ADB_MOD=1
 # Git浅拉取层级: 小于等于0时全克隆，否则按输入层浅克隆
 __MY_GIT_FETCH_DEPTH='-1'
 
@@ -26,11 +28,13 @@ alias reopen='open -a terminal $(pwd) & kill -9 $$'
 alias reo='reopen'
 # 清理终端
 alias cls='my_clean screen'
+# retrace
+alias retrace=~/Library/Android/sdk/tools/proguard/bin/proguardgui.sh
 
 # ============ ADB ============
 # 快捷方式: 查看当前连接设备
+alias adb='adb -d'
 alias devs='adb devices'
-alias dvs='adb devices'
 # 快捷方式: 包装的adb
 alias madb='my_multi_adb'
 # 快捷方式: 建立无线连接
@@ -45,8 +49,8 @@ alias proxy='my_proxy'
 alias ain='my_ain'
 # 快捷方式: 开源输入法支持中文
 alias aime='my_aime'
-# 安装APK
-alias install='mgit install'
+# 快捷方式: 安装apk
+alias install='madb install'
 
 # ============ Git ============
 # 快捷方式: 自定义Git命令包装
@@ -68,6 +72,10 @@ alias debug='my_pkg_debug'
 # 快捷方式: 依赖分析
 alias deps='my_deps'
 alias dfilter='my_deps_filter'
+# deeplink
+function dlink() {
+    my_multi_adb shell am start -a android.intent.action.VIEW -d "'$*'"
+}
 
 # =============================================================================================
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ ADB ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1198,4 +1206,3 @@ if [[ $1 == "install" ]]; then # +++
     mt_i_basic $*              # +++
     exit 0                     # +++
 fi                             # +++
-
