@@ -1,7 +1,7 @@
 if [[ -n "$MY_BASIC_TOOLS" ]]; then
     return
 fi
-readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 2026098.2041)'
+readonly MY_BASIC_TOOLS='Basic.My.Tool: Version 2.2 (build at 20260909.0747)'
 readonly MY_TOOL_SERVER='http://127.0.0.1'
 export pc=pc@192.168.3.100
 alias pc="ssh $pc"
@@ -24,7 +24,7 @@ __MY_GIT_FETCH_DEPTH='-1'
 alias mt='__my'
 
 # 快捷方式: 终端重启
-alias reopen='open -a terminal $(pwd) & kill -9 $$'
+alias reopen='open -a ${TERM_PROGRAM#Apple_} $(pwd) & kill -9 $$'
 alias reo='reopen'
 # 清理终端
 alias cls='my_clean screen'
